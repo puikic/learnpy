@@ -8,8 +8,9 @@ def move_pointer(p):
 
 def modify_content(p):
     p.val = 100  # 修改节点内容（影响外部）
+    temp = ListNode(666)
     if p.next:
-        p.next.val = 200  # 修改下一个节点（影响外部）
+        p.next = temp  # 修改下一个节点（影响外部）
 
 head = ListNode(1, ListNode(2, ListNode(3)))
 print("原始头节点值:", head.val)  # 输出 1
