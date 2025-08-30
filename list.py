@@ -4,3 +4,8 @@ merged = [21, 22]
 
 arr[i:i+3] = merged
 print(arr)
+
+
+# list index out of range
+# l = []
+# print(l[0])
