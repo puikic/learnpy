@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e2bd0573-384b-436a-8827-6ec2b5b2348b" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PythonProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PythonProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list.py" beforeDir="false" afterPath="$PROJECT_DIR$/list.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +55,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.quick_sort">
+  <component name="RunManager" selected="Python.func">
     <configuration name="func" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PythonProject" />
       <option name="ENV_FILES" value="" />
@@ -199,10 +196,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.func" />
         <item itemvalue="Python.quick_sort" />
         <item itemvalue="Python.list" />
         <item itemvalue="Python.heap_sort" />
-        <item itemvalue="Python.func" />
         <item itemvalue="Python.sgd" />
       </list>
     </recent_temporary>
@@ -228,7 +225,8 @@
       <workItem from="1749695231444" duration="68000" />
       <workItem from="1756539541883" duration="10918000" />
       <workItem from="1756562915976" duration="363000" />
-      <workItem from="1756563805455" duration="538000" />
+      <workItem from="1756563805455" duration="1308000" />
+      <workItem from="1756565192734" duration="2000" />
     </task>
     <servers />
   </component>

@@ -19,4 +19,9 @@ print("调用后头节点值:", head.val)  # 输出 1（未改变）
 modify_content(head)
 print("调用后节点值:", head.val, head.next.val)  # 输出 100（改变）
 
+def change_arr(nums):
+    nums[0] = 999
 
+l = [1,2,3]
+change_arr(l)
+print(l)
