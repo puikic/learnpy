@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e2bd0573-384b-436a-8827-6ec2b5b2348b" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/learn_llm/self-attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/learn_llm/self-attention.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -240,7 +241,7 @@
       <workItem from="1757471680698" duration="1046000" />
       <workItem from="1757679261292" duration="4531000" />
       <workItem from="1757753257218" duration="5891000" />
-      <workItem from="1757843301745" duration="3284000" />
+      <workItem from="1757843301745" duration="8452000" />
     </task>
     <servers />
   </component>
