@@ -26,9 +26,9 @@ class SelfAttention(nn.Module):
         )
         return output
 
-X = torch.rand(4,3,5)
-n = SelfAttention(5)
-print(n(X))
+# X = torch.rand(4,3,5)
+# n = SelfAttention(5)
+# print(n(X))
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, hidden_dim, head_num):
@@ -70,3 +70,6 @@ class MultiHeadAttention(nn.Module):
         output = self.o_proj(context)
         return output
 
+X = torch.rand(4,3,15)
+n = MultiHeadAttention(15, 3)
+print(n(X))

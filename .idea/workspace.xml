@@ -241,7 +241,7 @@
       <workItem from="1757471680698" duration="1046000" />
       <workItem from="1757679261292" duration="4531000" />
       <workItem from="1757753257218" duration="5891000" />
-      <workItem from="1757843301745" duration="8452000" />
+      <workItem from="1757843301745" duration="12068000" />
     </task>
     <servers />
   </component>
@@ -258,6 +258,6 @@
     <SUITE FILE_PATH="coverage/learnpy$list.coverage" NAME="list 覆盖结果" MODIFIED="1756561796024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/learnpy$a.coverage" NAME="a 覆盖结果" MODIFIED="1757753689122" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/numpy" />
     <SUITE FILE_PATH="coverage/learnpy$heapq.coverage" NAME="heapq 覆盖结果" MODIFIED="1757756462944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/learnpy$self_attention.coverage" NAME="self-attention 覆盖结果" MODIFIED="1757850430564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/learn_llm" />
+    <SUITE FILE_PATH="coverage/learnpy$self_attention.coverage" NAME="self-attention 覆盖结果" MODIFIED="1757861148480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/learn_llm" />
   </component>
 </project>
