@@ -1,6 +1,8 @@
 import math
 import torch
+from torch.nn.functional import softmax
 import torch.nn as nn
+
 
 class SelfAttention(nn.Module):
     def __init__(self, hidden_dim):
@@ -19,7 +21,7 @@ class SelfAttention(nn.Module):
         if mask is not None:
             attention_score = attention_score.masked_fill(mask==0, float('-inf'))
         
-        attention_weight = torch.softmax(attention_score, -1)
+        attention_weight = softmax(attention_score, -1)
         attention_weight = self.att_drop(attention_weight)
         output = torch.matmul(
             attention_weight, V
