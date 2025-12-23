@@ -1,4 +1,4 @@
-class MaxHeap:
+class MinHeap:
     def __init__(self, arr = None):
         self.heap = arr if arr else []
         self.init()
@@ -33,13 +33,13 @@ class MaxHeap:
             self.heap[i], self.heap[small] = self.heap[small], self.heap[i]
             i = small
 
-        def _up(self, i):
-            while i > 0:
-                parent = (i-1)//2
-                if self.heap[parent] >= self.heap[i]:
-                    break
-                self.heap[i], self.heap[parent] = self.heap[parent], self.heap[i]
-                i = parent
+    def _up(self, i):
+        while i > 0:
+            parent = (i-1)//2
+            if self.heap[parent] <= self.heap[i]:
+                break
+            self.heap[i], self.heap[parent] = self.heap[parent], self.heap[i]
+            i = parent
 
 if __name__ == '__main__':
     h = MaxHeap([4, 2, 3, 14, 5, 16, 1, 8, 0])
