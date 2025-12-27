@@ -13,7 +13,7 @@ class SelfAttention(nn.Module):
         self.key_proj = nn.Linear(hidden_dim, hidden_dim)
         self.value_proj = nn.Linear(hidden_dim, hidden_dim)
 
-    def forward(self,x, mask=None):
+    def forward(self, x, mask=None):
         Q = self.query_proj(x)
         K = self.key_proj(x)
         V = self.value_proj(x)
@@ -65,11 +65,11 @@ class MultiHeadAttention(nn.Module):
         attention_weight = torch.softmax(attention_score, -1)
         attention_weight = self.att_drop(attention_weight)
 
-        context = torch.matmul(attention_weight, V)  # (batch, num_heads, seq_len, head_dim)
+        attention_output = torch.matmul(attention_weight, V)  # (batch, num_heads, seq_len, head_dim)
         # concat 多头 -> (batch, seq_len, hidden_dim)
-        context = context.transpose(1, 2).contiguous().view(batch_size, seq_len, self.hidden_dim)
+        attention_output = attention_output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.hidden_dim)
 
-        output = self.o_proj(context)
+        output = self.o_proj(attention_output)
         return output
 
 X = torch.rand(4,3,15)
