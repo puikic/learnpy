@@ -1,6 +1,5 @@
 import math
 import torch
-from torch.nn.functional import softmax
 import torch.nn as nn
 
 
@@ -67,7 +66,7 @@ class MultiHeadAttention(nn.Module):
 
         attention_output = torch.matmul(attention_weight, V)  # (batch, num_heads, seq_len, head_dim)
         # concat 多头 -> (batch, seq_len, hidden_dim)
-        attention_output = attention_output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.hidden_dim)
+        attention_output = attention_output.transpose(1, 2).reshape(batch_size, seq_len, self.hidden_dim)
 
         output = self.o_proj(attention_output)
         return output
@@ -91,7 +90,7 @@ class GroupedQueryAttention(nn.Module):
         self.o_proj = nn.Linear(hidden_dim, hidden_dim)
 
     def repeat_kv(self, x, nums):
-        batch_size, num_kv_heads, seq_len, head_dim = x.shape
+        batch_size, num_kv_heads, seq_len, head_dim = x.size() # or x.shape
         if nums == 1:
             return x
         x = x[:, :, None, :, :].expand(batch_size, num_kv_heads, nums, seq_len, head_dim)
@@ -117,6 +116,6 @@ class GroupedQueryAttention(nn.Module):
         attention_weight = torch.softmax(attention_score, -1)
         attention_weight = self.att_drop(attention_weight)
         attention_output = torch.matmul(attention_weight, V)  # (batch, num_heads, seq_len, head_dim)
-        attention_output = attention_output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.hidden_dim)
+        attention_output = attention_output.transpose(1, 2).reshape(batch_size, seq_len, self.hidden_dim)
         output = self.o_proj(attention_output)  
         return output
