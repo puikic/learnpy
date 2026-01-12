@@ -42,7 +42,7 @@ class MinHeap:
             i = parent
 
 if __name__ == '__main__':
-    h = MaxHeap([4, 2, 3, 14, 5, 16, 1, 8, 0])
+    h = MinHeap([4, 2, 3, 14, 5, 16, 1, 8, 0])
 
     for i in range(len(h.heap)):
         print(h.pop())
