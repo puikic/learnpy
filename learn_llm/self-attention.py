@@ -93,7 +93,7 @@ class GroupedQueryAttention(nn.Module):
         batch_size, num_kv_heads, seq_len, head_dim = x.size() # or x.shape
         if nums == 1:
             return x
-        x = x[:, :, None, :, :].expand(batch_size, num_kv_heads, nums, seq_len, head_dim)
+        x = x[:, :, None, :, :].expand(batch_size, num_kv_heads, nums, seq_len, head_dim) # 不能改变顺序
         return x.reshape(batch_size, num_kv_heads * nums, seq_len, head_dim)
 
     def forward(self, x, mask=None):
