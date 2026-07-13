@@ -33,7 +33,7 @@ class MaxHeap:
             self.heap[i], self.heap[small] = self.heap[small], self.heap[i]
             i = small
 
-        def _up(self, i):
+    def _up(self, i):
             while i > 0:
                 parent = (i-1)//2
                 if self.heap[parent] >= self.heap[i]:
