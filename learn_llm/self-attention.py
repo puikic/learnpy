@@ -75,3 +75,53 @@ class MultiHeadAttention(nn.Module):
 X = torch.rand(4,3,15)
 n = MultiHeadAttention(15, 3)
 print(n(X))
+
+
+class GroupedQueryAttention(nn.Module):
+    def __init__(self, hidden_dim, head_num, kv_head_num):
+        super().__init__()
+        assert head_num % kv_head_num == 0
+        self.hidden_dim = hidden_dim
+        self.head_num = head_num
+        self.kv_head_num = kv_head_num
+        self.head_dim = hidden_dim // head_num
+        self.group_size = head_num // kv_head_num
+        self.att_drop = nn.Dropout(0.1)
+        # Q 按全部 head 投影；K/V 只按 kv_head_num 投影，参数量相比 MHA 减少
+        self.q_proj = nn.Linear(hidden_dim, hidden_dim)
+        self.k_proj = nn.Linear(hidden_dim, kv_head_num * self.head_dim)
+        self.v_proj = nn.Linear(hidden_dim, kv_head_num * self.head_dim)
+        self.o_proj = nn.Linear(hidden_dim, hidden_dim)
+
+    def forward(self, x, mask=None):
+        batch_size, seq_len, _ = x.size()
+        Q = self.q_proj(x)  # (batch, seq_len, hidden_dim)
+        K = self.k_proj(x)  # (batch, seq_len, kv_head_num * head_dim)
+        V = self.v_proj(x)
+
+        Q = Q.view(batch_size, seq_len, self.head_num, self.head_dim).transpose(1, 2)
+        K = K.view(batch_size, seq_len, self.kv_head_num, self.head_dim).transpose(1, 2)
+        V = V.view(batch_size, seq_len, self.kv_head_num, self.head_dim).transpose(1, 2)
+
+        # GQA 核心: 每个相邻的 group_size 个 q 头共享同一组 kv 头
+        # [kv0, kv1] -> [kv0, kv0, kv1, kv1] (group_size=2)
+        K = K.repeat_interleave(self.group_size, dim=1)
+        V = V.repeat_interleave(self.group_size, dim=1)
+
+        attention_score = torch.matmul(Q, K.transpose(-1, -2)) / math.sqrt(self.head_dim)
+        if mask is not None:
+            attention_score = attention_score.masked_fill(mask==0, float('-inf'))
+
+        attention_weight = torch.softmax(attention_score, -1)
+        attention_weight = self.att_drop(attention_weight)
+
+        context = torch.matmul(attention_weight, V)  # (batch, head_num, seq_len, head_dim)
+        context = context.transpose(1, 2).contiguous().view(batch_size, seq_len, self.hidden_dim)
+
+        output = self.o_proj(context)
+        return output
+
+
+X = torch.rand(4,3,16)
+n = GroupedQueryAttention(16, 4, 2)
+print(n(X))
