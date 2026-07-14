@@ -10,7 +10,7 @@ learn_py/
 │   ├── heap_sort.py                #   最小堆（MinHeap）实现
 │   └── quick_sort.py               #   快速排序（Hoare 分割）
 ├── learn_llm/                      # LLM 核心组件学习
-│   ├── self-attention.py           #   Self-Attention / MHA / GQA 实现
+│   ├── self-attention.py           #   Self-Attention / MHA / GQA / KV Cache 实现
 │   ├── rl.py                       #   GRPO 损失函数实现
 │   ├── GroupedQueryAttention.ipynb #   GQA 教程（含 MHA/MQA 对比）
 │   ├── causal-lm.ipynb             #   Causal LM 微调流程（ELI5 数据集）
@@ -45,7 +45,7 @@ learn_py/
 ### learn_llm/ — LLM 核心组件
 
 #### `self-attention.py`
-手写实现三种注意力机制，便于对比学习：
+手写实现多种注意力机制，便于对比学习从基础 Attention 到推理加速所需 KV Cache 的演进：
 
 | 类 | 机制 | K/V 复制方式 | 说明 |
 |---|---|---|---|
@@ -53,8 +53,12 @@ learn_py/
 | `MultiHeadAttention` | 多头注意力（MHA） | — | 含 `o_proj`，对多头拼接结果做特征融合 |
 | `GroupedQueryAttentionV1` | 分组查询注意力 | `repeat_interleave` | 直观写法，相邻 Q 头共享同一 KV 头 |
 | `GroupedQueryAttentionV2` | 分组查询注意力 | `repeat_kv`（expand + reshape） | 更接近 HuggingFace 生产实现 |
+| `MultiHeadAttentionWithKVCache` | MHA + KV Cache | — | 在自回归解码时缓存历史 K/V，并沿序列维度拼接新 token 的 K/V |
+| `GroupedQueryAttentionWithKVCache` | GQA + KV Cache | `repeat_interleave` | Cache 中只保存较少的 KV 头，计算 attention 前再扩展到 Q 头数，降低缓存显存占用 |
 
 > **GQA 关键点**：Q 头数 `H` 必须是 KV 头数 `H_kv` 的整数倍。由于 `torch.matmul` 要求非单例维度匹配，无法靠广播自动处理 `H ≠ H_kv`，必须先用 `repeat_interleave` 或 `repeat_kv` 把 K/V 在头维度显式复制到与 Q 相同的形状。
+>
+> **KV Cache 关键点**：Decode 阶段每次只输入新 token 时，Q 的序列长度通常很短，但 K/V 需要包含历史上下文；因此缓存沿 `seq_len` 维度拼接历史 K/V。GQA 版本先缓存压缩后的 `num_kv_heads` 个 K/V 头，真正计算前再扩展，体现了 GQA 在推理缓存上的显存优势。
 
 #### `rl.py`
 GRPO（Group Relative Policy Optimization）损失函数实现：
@@ -132,7 +136,7 @@ pip install torch transformers datasets accelerate ipywidgets jupyter openai
 uv run python algorithm/heap_sort.py    # 输出堆排序结果
 uv run python algorithm/quick_sort.py   # 输出快速排序结果
 
-# 运行注意力实现（会打印三种注意力的输出张量）
+# 运行注意力实现（会打印多种注意力的输出张量）
 uv run python learn_llm/self-attention.py
 
 # 运行 GRPO 损失函数（仅定义，需配合实际模型使用）
@@ -149,7 +153,7 @@ uv run python agent/test-apikey.py
 
 1. **数据结构**：堆的自底向上建堆、`_up`/`_down` 维护逻辑
 2. **排序算法**：快排的 Hoare 分割与递归结构
-3. **注意力机制**：从单头到 MHA、GQA、MQA 的演进，理解 `o_proj` 的必要性、`repeat_interleave` 的广播原理
+3. **注意力机制**：从单头到 MHA、GQA、MQA、KV Cache 的演进，理解 `o_proj` 的必要性、`repeat_interleave` 的广播原理和自回归解码中的 K/V 缓存复用
 4. **强化学习**：GRPO 的 group-relative advantage、PPO clipped objective、KL 正则
 5. **LLM 工具链**：HuggingFace `transformers` 的 Causal LM 微调、`output_attentions` 可视化
 6. **Python 语义**：引用语义、切片赋值、可变默认参数陷阱
