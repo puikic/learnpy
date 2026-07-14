@@ -20,7 +20,7 @@ class SelfAttention(nn.Module):
         if mask is not None:
             attention_score = attention_score.masked_fill(mask==0, float('-inf'))
         
-        attention_weight = softmax(attention_score, -1)
+        attention_weight = torch.softmax(attention_score, -1)
         attention_weight = self.att_drop(attention_weight)
         output = torch.matmul(
             attention_weight, V
@@ -76,7 +76,7 @@ n = MultiHeadAttention(15, 3)
 print(n(X))
 
 
-class GroupedQueryAttention(nn.Module):
+class GroupedQueryAttentionV1(nn.Module):
     def __init__(self, hidden_dim, head_num, kv_head_num):
         super().__init__()
         assert head_num % kv_head_num == 0
@@ -102,13 +102,29 @@ class GroupedQueryAttention(nn.Module):
         K = K.view(batch_size, seq_len, self.kv_head_num, self.head_dim).transpose(1, 2)
         V = V.view(batch_size, seq_len, self.kv_head_num, self.head_dim).transpose(1, 2)
 
-        # GQA 核心: 每个相邻的 group_size 个 q 头共享同一组 kv 头
-        # [kv0, kv1] -> [kv0, kv0, kv1, kv1] (group_size=2)
+        # 用 repeat_interleave 在头维度复制 K/V: [kv0, kv1] -> [kv0, kv0, kv1, kv1]
         K = K.repeat_interleave(self.group_size, dim=1)
         V = V.repeat_interleave(self.group_size, dim=1)
 
         attention_score = torch.matmul(Q, K.transpose(-1, -2)) / math.sqrt(self.head_dim)
-class GroupedQueryAttention(nn.Module):
+        if mask is not None:
+            attention_score = attention_score.masked_fill(mask==0, float('-inf'))
+
+        attention_weight = torch.softmax(attention_score, -1)
+        attention_weight = self.att_drop(attention_weight)
+
+        attention_output = torch.matmul(attention_weight, V)  # (batch, head_num, seq_len, head_dim)
+        attention_output = attention_output.transpose(1, 2).reshape(batch_size, seq_len, self.hidden_dim)
+        output = self.o_proj(attention_output)
+        return output
+
+
+X = torch.rand(4,3,16)
+n = GroupedQueryAttentionV1(16, 4, 2)
+print(n(X))
+
+
+class GroupedQueryAttentionV2(nn.Module):
     def __init__(self, hidden_dim, num_heads, num_kv_heads):
         super().__init__()
         self.hidden_dim = hidden_dim
@@ -157,9 +173,5 @@ class GroupedQueryAttention(nn.Module):
 
 
 X = torch.rand(4,3,16)
-n = GroupedQueryAttention(16, 4, 2)
+n = GroupedQueryAttentionV2(16, 4, 2)
 print(n(X))
-        attention_output = torch.matmul(attention_weight, V)  # (batch, num_heads, seq_len, head_dim)
-        attention_output = attention_output.transpose(1, 2).reshape(batch_size, seq_len, self.hidden_dim)
-        output = self.o_proj(attention_output)  
-        return output
