@@ -12,7 +12,8 @@ def auc(y_true, y_score):
 
     return count / (len(positive_scores) * len(negative_scores))
 
-
+# 按分数排序后逐组扫描，用“当前组正样本数 × 此前已出现的负样本数”批量累加赢分（1分），
+# 并用“组内正负样本数乘积 × 0.5”批量累加平局分
 def auc_fast(y_true, y_score):
     # 1. 将分数和标签配对，按分数从小到大排序
     pairs = sorted(zip(y_score, y_true), key=lambda x: x[0])
